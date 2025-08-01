@@ -1,7 +1,7 @@
 // pages/casa/[id].js
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import WeatherPanel from '@/components/WeatherPanel';
+import WeatherPanel from '../../components/WeatherPanel'; // ← Caminho corrigido!
 
 const CasaDigital = () => {
   const router = useRouter();
