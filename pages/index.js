@@ -24,7 +24,7 @@ export default function Home() {
         textShadow: '0 0 15px rgba(255,255,255,0.8)',
         marginBottom: '1rem'
       }}>
-        🚀 Social Home 3D
+        🚀 Social Hommmmmme 3D
       </h1>
       <p style={{
         fontSize: '1.2rem',
