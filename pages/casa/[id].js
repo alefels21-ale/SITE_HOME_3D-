@@ -77,7 +77,7 @@ const CasaDigital = () => {
       {/* Painel de Clima baseado na localização da casa */}
       <WeatherPanel latitude={-22.9711} longitude={-43.1822} />
 
-      {/* Stories (imagem simulada) */}
+      {/* Stories com bolha redonda */}
       <div className="flex space-x-3 mt-6 mb-6">
         <div
           className="w-16 h-16 rounded-full border-2 border-pink-500 flex items-center justify-center animate-pulse bg-cover bg-center"
@@ -140,16 +140,4 @@ const CasaDigital = () => {
               />
               <button
                 onClick={() => adicionarComentario(post.id)}
-                className="bg-blue-500 text-white px-2 py-1 rounded"
-              >
-                Comentar
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default CasaDigital;
+                className="bg-blue-500 text-w
