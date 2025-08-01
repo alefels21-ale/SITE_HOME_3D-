@@ -1,18 +1,13 @@
-import { useRef } from 'react';
-import { useFrame, useLoader } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useLoader } from '@react-three/fiber';
+import { TextureLoader } from 'three';
+import { Sphere } from '@react-three/drei';
 
 export default function EarthSphere() {
-  const earthRef = useRef();
-  const texture = useLoader(THREE.TextureLoader, '/textures/earth_daymap.jpg');
-
-  useFrame(() => {
-    earthRef.current.rotation.y += 0.0015;
-  });
+  const texture = useLoader(TextureLoader, '/textures/earth_daymap.jpg');
 
   return (
-    <mesh ref={earthRef}>
-      <sphereGeometry args={[2, 64, 64]} />
+    <mesh>
+      <sphereGeometry args={[1.5, 64, 64]} />
       <meshStandardMaterial map={texture} />
     </mesh>
   );
