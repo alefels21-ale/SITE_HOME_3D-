@@ -72,7 +72,7 @@ const CasaDigital = () => {
         Voltar para o início
       </button>
 
-      <h1 className="text-2xl font-bold mb-2">Bem-vindo à sua casa digital #{id}</h1>
+      <h1 className="text-2xl font-bold mb-2">Bem-vindo  #{id}</h1>
 
       {/* Painel de Clima baseado na localização da casa */}
       <WeatherPanel latitude={-22.9711} longitude={-43.1822} />
