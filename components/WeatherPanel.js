@@ -5,7 +5,7 @@ const WeatherPanel = ({ latitude, longitude }) => {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
 
-  const API_KEY = 'INSIRA_SUA_CHAVE_AQUI'; // ← Trocar pela sua chave da OpenWeather
+  const API_KEY = 'a7bb4ff922b4b83f7007702c5d30ddc5'; // ← Trocar pela sua chave da OpenWeather
 
   useEffect(() => {
     if (!latitude || !longitude) return;
