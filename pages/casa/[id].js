@@ -18,6 +18,8 @@ const CasaDigital = () => {
   ]);
 
   const [novoComentario, setNovoComentario] = useState('');
+  const [imagem, setImagem] = useState(null);
+  const [novoTexto, setNovoTexto] = useState('');
 
   const adicionarComentario = (postId) => {
     if (!novoComentario.trim()) return;
@@ -47,6 +49,20 @@ const CasaDigital = () => {
     setPosts(novosPosts);
   };
 
+  const postarMensagem = () => {
+    if (!novoTexto.trim()) return;
+    const novoPost = {
+      id: posts.length + 1,
+      texto: novoTexto,
+      imagem: imagem ? URL.createObjectURL(imagem) : null,
+      curtidas: 0,
+      comentarios: []
+    };
+    setPosts([novoPost, ...posts]);
+    setNovoTexto('');
+    setImagem(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white p-4">
       <button
@@ -56,23 +72,50 @@ const CasaDigital = () => {
         Voltar para o início
       </button>
 
-      <h1 className="text-2xl font-bold mb-2">Casa Digital #{id}</h1>
+      <h1 className="text-2xl font-bold mb-2">Bem-vindo à sua casa digital #{id}</h1>
 
-      {/* Painel de Clima (Latitude e Longitude simuladas) */}
+      {/* Painel de Clima baseado na localização da casa */}
       <WeatherPanel latitude={-22.9711} longitude={-43.1822} />
 
-      {/* Stories (simulação simples) */}
+      {/* Stories (imagem simulada) */}
       <div className="flex space-x-3 mt-6 mb-6">
-        <div className="w-16 h-16 rounded-full border-2 border-pink-500 flex items-center justify-center animate-pulse bg-cover bg-center"
-          style={{ backgroundImage: 'url(/perfil.jpg)' }}>
-        </div>
+        <div
+          className="w-16 h-16 rounded-full border-2 border-pink-500 flex items-center justify-center animate-pulse bg-cover bg-center"
+          style={{ backgroundImage: 'url(/perfil.jpg)' }}
+        ></div>
+      </div>
+
+      {/* Postar nova mensagem */}
+      <div className="bg-white/10 p-4 rounded-xl mb-6">
+        <h2 className="text-xl font-semibold mb-2">Deixe uma mensagem</h2>
+        <textarea
+          value={novoTexto}
+          onChange={(e) => setNovoTexto(e.target.value)}
+          placeholder="Escreva algo..."
+          className="w-full p-2 rounded text-black mb-2"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImagem(e.target.files[0])}
+          className="mb-2"
+        />
+        <button
+          onClick={postarMensagem}
+          className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
+        >
+          Postar
+        </button>
       </div>
 
       {/* Mural de Posts */}
+      <h2 className="text-xl font-semibold mb-4">Mural</h2>
       <div className="space-y-6">
         {posts.map(post => (
           <div key={post.id} className="bg-white/10 p-4 rounded-xl shadow">
-            <img src={post.imagem} alt="Post" className="w-full rounded mb-2" />
+            {post.imagem && (
+              <img src={post.imagem} alt="Post" className="w-full rounded mb-2" />
+            )}
             <p className="mb-2">{post.texto}</p>
             <div className="flex items-center space-x-4 mb-2">
               <button
