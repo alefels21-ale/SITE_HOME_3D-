@@ -72,9 +72,9 @@ const CasaDigital = () => {
         Voltar para o início
       </button>
 
-      <h1 className="text-2xl font-bold mb-2">Bem-vindo  #{id}</h1>
+      <h1 className="text-2xl font-bold mb-2">🏠 TESTE DE ATUALIZAÇÃO #{id}</h1>
 
-      {/* Painel de Clima baseado na localização da casa */}
+      {/* Painel de Clima */}
       <WeatherPanel latitude={-22.9711} longitude={-43.1822} />
 
       {/* Stories com bolha redonda */}
@@ -140,4 +140,16 @@ const CasaDigital = () => {
               />
               <button
                 onClick={() => adicionarComentario(post.id)}
-                className="bg-blue-500 text-w
+                className="bg-blue-500 text-white px-2 py-1 rounded"
+              >
+                Comentar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default CasaDigital;
