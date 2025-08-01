@@ -5,7 +5,7 @@ const WeatherPanel = ({ latitude, longitude }) => {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
 
-  const API_KEY = 'a7bb4ff922b4b83f7007702c5d30ddc5';//
+  const API_KEY = 'a7bb4ff922b4b83f7007702c5d30ddc5'; // ← SUA CHAVE
 
   useEffect(() => {
     if (!latitude || !longitude) return;
