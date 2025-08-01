@@ -1,164 +1,112 @@
+// pages/casa/[id].js
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import WeatherPanel from '@/components/WeatherPanel';
 
-const emojis = ['❤️', '😂', '😮', '😢'];
-
-export default function Casa() {
+const CasaDigital = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [stories, setStories] = useState([]);
-  const [storyPreview, setStoryPreview] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const [message, setMessage] = useState('');
-  const [image, setImage] = useState(null);
-  const [fullscreenStory, setFullscreenStory] = useState(null);
 
-  const addReaction = (postIndex, emoji) => {
-    const newPosts = [...posts];
-    newPosts[postIndex].reactions = newPosts[postIndex].reactions || {};
-    newPosts[postIndex].reactions[emoji] = (newPosts[postIndex].reactions[emoji] || 0) + 1;
-    setPosts(newPosts);
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      texto: 'Primeiro post da casa!',
+      imagem: '/exemplo.jpg',
+      curtidas: 3,
+      comentarios: ['Muito legal!', 'Top demais']
+    }
+  ]);
+
+  const [novoComentario, setNovoComentario] = useState('');
+
+  const adicionarComentario = (postId) => {
+    if (!novoComentario.trim()) return;
+    const novosPosts = posts.map(post => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          comentarios: [...post.comentarios, novoComentario]
+        };
+      }
+      return post;
+    });
+    setPosts(novosPosts);
+    setNovoComentario('');
   };
 
-  const addComment = (postIndex, comment) => {
-    const newPosts = [...posts];
-    newPosts[postIndex].comments = newPosts[postIndex].comments || [];
-    newPosts[postIndex].comments.push(comment);
-    setPosts(newPosts);
+  const adicionarCurtida = (postId) => {
+    const novosPosts = posts.map(post => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          curtidas: post.curtidas + 1
+        };
+      }
+      return post;
+    });
+    setPosts(novosPosts);
   };
-
-  const handleStoryUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    const expiration = Date.now() + 24 * 60 * 60 * 1000;
-    setStories([...stories, { url, expiration }]);
-  };
-
-  const handlePost = () => {
-    if (!message && !image) return;
-    const newPost = {
-      message,
-      image,
-      date: new Date().toLocaleString(),
-      comments: [],
-      reactions: {}
-    };
-    setPosts([newPost, ...posts]);
-    setMessage('');
-    setImage(null);
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = Date.now();
-      setStories((prev) => prev.filter((s) => s.expiration > now));
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
-    <div style={{ padding: 20 }}>
-      <a href="/" style={{ display: 'inline-block', marginBottom: 20 }}>← Voltar ao início</a>
-      <h2>Bem-vindo à sua casa digital #{id}</h2>
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white p-4">
+      <button
+        onClick={() => router.push('/')}
+        className="bg-white text-black px-4 py-2 rounded mb-4"
+      >
+        Voltar para o início
+      </button>
 
-      {/* STORIES */}
-      <h3>Stories (24h)</h3>
-      <input type="file" accept="image/*" onChange={handleStoryUpload} />
-      <div style={{ display: 'flex', gap: 15, marginTop: 10 }}>
-        {stories.map((story, idx) => (
-          <img
-            key={idx}
-            src={story.url}
-            onClick={() => setFullscreenStory(story.url)}
-            style={{
-              width: 70,
-              height: 70,
-              borderRadius: '50%',
-              border: '2px solid #ccc',
-              objectFit: 'cover',
-              cursor: 'pointer',
-              animation: 'float 3s ease-in-out infinite',
-            }}
-          />
-        ))}
+      <h1 className="text-2xl font-bold mb-2">Casa Digital #{id}</h1>
+
+      {/* Painel de Clima (Latitude e Longitude simuladas) */}
+      <WeatherPanel latitude={-22.9711} longitude={-43.1822} />
+
+      {/* Stories (simulação simples) */}
+      <div className="flex space-x-3 mt-6 mb-6">
+        <div className="w-16 h-16 rounded-full border-2 border-pink-500 flex items-center justify-center animate-pulse bg-cover bg-center"
+          style={{ backgroundImage: 'url(/perfil.jpg)' }}>
+        </div>
       </div>
 
-      {/* FULLSCREEN STORY */}
-      {fullscreenStory && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0,
-          width: '100%', height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.9)',
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <button onClick={() => setFullscreenStory(null)} style={{ marginBottom: 20, color: '#fff' }}>Fechar ✖</button>
-          <img src={fullscreenStory} style={{ maxWidth: '90%', maxHeight: '80%', borderRadius: 10 }} />
-          <div style={{ marginTop: 10 }}>
-            {emojis.map((e, i) => (
-              <button key={i} onClick={() => alert(`Você reagiu com ${e}`)} style={{ fontSize: 24, margin: 5 }}>{e}</button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* POSTAGEM */}
-      <h3>Deixe uma mensagem</h3>
-      <textarea
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Escreva algo..."
-        style={{ width: '100%', height: 60 }}
-      />
-      <input type="file" accept="image/*" onChange={(e) => {
-        const file = e.target.files[0];
-        if (file) setImage(URL.createObjectURL(file));
-      }} />
-      <button onClick={handlePost}>Postar</button>
-
-      {/* MURAL */}
-      <h3>Mural</h3>
-      {posts.map((post, idx) => (
-        <div key={idx} style={{ border: '1px solid #ccc', padding: 10, marginTop: 10, borderRadius: 8 }}>
-          <p>{post.message}</p>
-          {post.image && <img src={post.image} alt="img" style={{ maxWidth: '100%', marginTop: 10 }} />}
-          <p style={{ fontSize: 12, color: '#555' }}>{post.date}</p>
-
-          <div>
-            {emojis.map((e, i) => (
-              <button key={i} onClick={() => addReaction(idx, e)} style={{ fontSize: 18, marginRight: 5 }}>
-                {e} ({post.reactions?.[e] || 0})
+      {/* Mural de Posts */}
+      <div className="space-y-6">
+        {posts.map(post => (
+          <div key={post.id} className="bg-white/10 p-4 rounded-xl shadow">
+            <img src={post.imagem} alt="Post" className="w-full rounded mb-2" />
+            <p className="mb-2">{post.texto}</p>
+            <div className="flex items-center space-x-4 mb-2">
+              <button
+                onClick={() => adicionarCurtida(post.id)}
+                className="text-yellow-400"
+              >
+                👍 {post.curtidas}
               </button>
-            ))}
+            </div>
+            <div>
+              <h4 className="font-semibold mb-1">Comentários:</h4>
+              <ul className="mb-2">
+                {post.comentarios.map((comentario, index) => (
+                  <li key={index} className="text-sm">– {comentario}</li>
+                ))}
+              </ul>
+              <input
+                value={novoComentario}
+                onChange={(e) => setNovoComentario(e.target.value)}
+                placeholder="Escreva um comentário..."
+                className="px-2 py-1 rounded text-black w-full mb-2"
+              />
+              <button
+                onClick={() => adicionarComentario(post.id)}
+                className="bg-blue-500 text-white px-2 py-1 rounded"
+              >
+                Comentar
+              </button>
+            </div>
           </div>
-
-          <div style={{ marginTop: 10 }}>
-            <strong>Comentários:</strong>
-            <ul>
-              {post.comments?.map((c, i) => <li key={i}>{c}</li>)}
-            </ul>
-            <input
-              placeholder="Escreva um comentário..."
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && e.target.value.trim()) {
-                  addComment(idx, e.target.value);
-                  e.target.value = '';
-                }
-              }}
-              style={{ width: '100%' }}
-            />
-          </div>
-        </div>
-      ))}
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-      `}</style>
+        ))}
+      </div>
     </div>
   );
-}
+};
+
+export default CasaDigital;
