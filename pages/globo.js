@@ -1,6 +1,4 @@
-import dynamic from 'next/dynamic';
-
-const Globo3D = dynamic(() => import('../app/Globo3D'), { ssr: false });
+import Globo3D from '../app/Globo3D';
 
 export default function GloboPage() {
   return <Globo3D />;
